@@ -4,6 +4,7 @@ import com.vodafone.onionpatterndemo.model.User;
 import com.vodafone.onionpatterndemo.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,6 +40,6 @@ public class UserService implements CustomService<User> {
 
   @Override
   public User findByEmail(String email) {
-    return this.userRepository.findUserByEmail(email);
+    return this.userRepository.findUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Couldn't find user with name : " + email));
   }
 }

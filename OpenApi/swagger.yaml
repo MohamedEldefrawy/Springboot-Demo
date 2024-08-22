@@ -46,6 +46,7 @@ components:
       required:
         - username
         - email
+        - password
         - phone
       properties:
         id:
@@ -55,6 +56,9 @@ components:
         username:
           type: string
           example: theUser
+        password:
+          type: string
+          example: 1234
         email:
           type: string
           example: john@email.com

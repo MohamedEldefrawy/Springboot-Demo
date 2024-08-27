@@ -1,5 +1,6 @@
 package com.vodafone.onionpatterndemo.config;
 
+import com.vodafone.onionpatterndemo.security.CustomAuthenticationProvider;
 import com.vodafone.onionpatterndemo.security.filter.AuthenticationLoggingFilter;
 import com.vodafone.onionpatterndemo.security.filter.RequestIdHeaderFilter;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebAuthorizationConfig {
 
+  private final CustomAuthenticationProvider customAuthenticationProvider;
 
   @Bean
   public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {
 
     http.httpBasic(Customizer.withDefaults());
+    http.authenticationProvider(customAuthenticationProvider);
     http.addFilterBefore(new RequestIdHeaderFilter(), UsernamePasswordAuthenticationFilter.class);
     http.addFilterAfter(new AuthenticationLoggingFilter(), UsernamePasswordAuthenticationFilter.class);
 

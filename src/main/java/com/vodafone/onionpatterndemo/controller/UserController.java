@@ -1,6 +1,7 @@
 package com.vodafone.onionpatterndemo.controller;
 
 import com.vodafone.onionpatterndemo.dto.CreateUserRequest;
+import com.vodafone.onionpatterndemo.dto.UserDto;
 import com.vodafone.onionpatterndemo.mapper.UserMapper;
 import com.vodafone.onionpatterndemo.model.User;
 import com.vodafone.onionpatterndemo.service.UserService;
@@ -26,15 +27,14 @@ public class UserController {
   private final UserMapper userMapper;
 
   @GetMapping("/users")
-  public ResponseEntity<List<User>> getUsers(@RequestParam(required = false, name = "email") String email) {
+  public ResponseEntity<List<UserDto>> getUsers(@RequestParam(required = false, name = "email") String email) {
     List<User> users = new ArrayList<>();
     if (Objects.isNull(email)) {
       users = userService.findAll();
-      return new ResponseEntity<>(users, HttpStatus.OK);
+      return new ResponseEntity<>(users.stream().map(this.userMapper::mapUserToUserDto).toList(), HttpStatus.OK);
     }
-
     users.add(userService.findByEmail(email));
-    return new ResponseEntity<>(users, HttpStatus.OK);
+    return new ResponseEntity<>(users.stream().map(this.userMapper::mapUserToUserDto).toList(), HttpStatus.OK);
   }
 
 

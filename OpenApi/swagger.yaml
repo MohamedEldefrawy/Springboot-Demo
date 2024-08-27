@@ -37,10 +37,37 @@ paths:
               examples:
                 MissingRequiredAttribute:
                   $ref: '#/components/examples/MissingRequiredAttributeExample'
+    get:
+      tags:
+        - user
+      summary: List all users in the system
+      description: This can only be done by the logged in user.
+      operationId: getUsers
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDto'
+              examples:
+                GetAllUsers:
+                  $ref: '#/components/examples/GetAllUsers'
+
+
+
 
 
 components:
   schemas:
+    AuthorityDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: can_read_entity
     CreateUserRequest:
       type: object
       required:
@@ -65,6 +92,30 @@ components:
         phone:
           type: string
           example: '12345'
+    UserDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        userName:
+          type: string
+          example: theUser
+        email:
+          type: string
+          example: john@email.com
+        phone:
+          type: string
+          example: '12345'
+        creationDate:
+          type: string
+          format: date
+          example: 2024-08-27
+        authorities:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthorityDto'
     BadRequest:
       type: object
       required:
@@ -83,4 +134,12 @@ components:
       value:
         code: users.MISSING_REQUIRED_ARGUMENT
         reason: missing required %S attribute
-
+    GetAllUsers:
+      value:
+        - id: 1
+          userName: Mohamed
+          email: modafro
+          phone: '01111111111'
+          creationDate: '2024-08-27'
+          authorities:
+            - name: can-read-users

@@ -14,4 +14,5 @@ public class CustomEntryPoint implements AuthenticationEntryPoint {
     response.addHeader("X-Auth_Failed", "Failed to authenticate");
     response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
   }
+
 }

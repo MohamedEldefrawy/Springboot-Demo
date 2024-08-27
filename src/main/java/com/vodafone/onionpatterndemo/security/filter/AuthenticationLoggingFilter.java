@@ -1,23 +1,21 @@
 package com.vodafone.onionpatterndemo.security.filter;
 
-import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
-public class AuthenticationLoggingFilter implements Filter {
+@Component
+public class AuthenticationLoggingFilter extends OncePerRequestFilter {
   @Override
-  public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-    HttpServletRequest request = (HttpServletRequest) servletRequest;
-
+  public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
     String requestID = request.getHeader("X-Request-ID");
     log.info("Successfully logged in with X-Request-ID: {}", requestID);
-    filterChain.doFilter(request, servletResponse);
+    filterChain.doFilter(request, response);
   }
 }

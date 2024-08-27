@@ -8,14 +8,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class CustomAuthenticationProvider implements AuthenticationProvider {
-  private final UserDetailsService userDetailsService;
+  private final CustomUserDetailsService userDetailsService;
   private final PasswordEncoder passwordEncoder;
 
   @Override
@@ -23,11 +22,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
       throws AuthenticationException {
     String username = authentication.getName();
     String password = authentication.getCredentials().toString();
-    UserDetails user = this.userDetailsService.loadUserByUsername(username);
-    if (username.equals(user.getUsername()) && passwordEncoder.matches(user.getPassword(), password)) {
+    UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+    if (username.equals(userDetails.getUsername()) && passwordEncoder.matches(userDetails.getPassword(), password)) {
       return new UsernamePasswordAuthenticationToken(username, password, List.of());
     } else {
-      throw new AuthenticationCredentialsNotFoundException("Bad credentials");
+      throw new AuthenticationCredentialsNotFoundException("Incorrect password");
     }
   }
 

@@ -7,6 +7,7 @@ import com.vodafone.onionpatterndemo.security.filter.RequestIdHeaderFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -30,7 +31,8 @@ public class WebAuthorizationConfig {
     http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
     {
       authorizationManagerRequestMatcherRegistry.requestMatchers("/h2-console/**").permitAll();
-      authorizationManagerRequestMatcherRegistry.requestMatchers("/users/**").hasAuthority("can-create-users");
+      authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.POST,"/users").hasAuthority("can-create-users");
+      authorizationManagerRequestMatcherRegistry.requestMatchers(HttpMethod.GET,"/users/**").hasAuthority("can-read-users");
     });
 
     http.httpBasic(httpSecurityHttpBasicConfigurer ->
@@ -40,7 +42,6 @@ public class WebAuthorizationConfig {
     });
 
     http.authenticationProvider(customAuthenticationProvider);
-//    http.addFilterBefore(requestIdHeaderFilter, UsernamePasswordAuthenticationFilter.class);
     http.addFilterAfter(authenticationLoggingFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();

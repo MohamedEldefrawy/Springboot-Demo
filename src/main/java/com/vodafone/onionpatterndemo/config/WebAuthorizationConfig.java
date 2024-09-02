@@ -30,7 +30,7 @@ public class WebAuthorizationConfig {
     http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
     {
       authorizationManagerRequestMatcherRegistry.requestMatchers("/h2-console/**").permitAll();
-      authorizationManagerRequestMatcherRegistry.anyRequest().authenticated();
+      authorizationManagerRequestMatcherRegistry.requestMatchers("/users/**").hasAuthority("can-create-users");
     });
 
     http.httpBasic(httpSecurityHttpBasicConfigurer ->

@@ -1,20 +1,20 @@
 package com.vodafone.onionpatterndemo.security.model;
 
+import com.vodafone.onionpatterndemo.model.Authority;
 import com.vodafone.onionpatterndemo.model.User;
+import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @RequiredArgsConstructor
-public class SecurityUser implements UserDetails {
+public class SecurityUser implements UserDetails, Serializable {
 
   private final User user;
 
   @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(() -> "READ");
+  public Collection<Authority> getAuthorities() {
+    return user.getAuthorities();
   }
 
   @Override

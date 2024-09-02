@@ -24,15 +24,8 @@ public class WebAuthorizationConfig {
   @Bean
   public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {
 
-    http.httpBasic(httpSecurityHttpBasicConfigurer ->
-    {
-      httpSecurityHttpBasicConfigurer.realmName("Other");
-      httpSecurityHttpBasicConfigurer.authenticationEntryPoint(new CustomEntryPoint());
-    });
-
-    http.authenticationProvider(customAuthenticationProvider);
-    http.addFilterBefore(authenticationLoggingFilter, UsernamePasswordAuthenticationFilter.class);
-    http.addFilterAfter(authenticationLoggingFilter, UsernamePasswordAuthenticationFilter.class);
+    http.csrf(AbstractHttpConfigurer::disable);
+    http.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(Customizer.withDefaults()).disable());
 
     http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
     {
@@ -40,8 +33,15 @@ public class WebAuthorizationConfig {
       authorizationManagerRequestMatcherRegistry.anyRequest().authenticated();
     });
 
-    http.csrf(AbstractHttpConfigurer::disable);
-    http.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(Customizer.withDefaults()).disable());
+    http.httpBasic(httpSecurityHttpBasicConfigurer ->
+    {
+      httpSecurityHttpBasicConfigurer.realmName("Other");
+      httpSecurityHttpBasicConfigurer.authenticationEntryPoint(new CustomEntryPoint());
+    });
+
+    http.authenticationProvider(customAuthenticationProvider);
+//    http.addFilterBefore(requestIdHeaderFilter, UsernamePasswordAuthenticationFilter.class);
+    http.addFilterAfter(authenticationLoggingFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }

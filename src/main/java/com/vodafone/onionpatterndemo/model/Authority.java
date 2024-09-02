@@ -1,31 +1,29 @@
 package com.vodafone.onionpatterndemo.model;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name = "AUTHORITIES")
 @Getter
 @Setter
-public class Authority {
+public class Authority implements GrantedAuthority {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   private String authority;
 
-  @OneToMany(mappedBy = "authority",cascade = CascadeType.ALL)
+  @ManyToMany(mappedBy = "authorities",
+      cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
   private Set<User> user;
 }

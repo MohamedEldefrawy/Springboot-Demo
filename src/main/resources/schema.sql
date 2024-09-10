@@ -6,6 +6,7 @@ CREATE TABLE if not exists USERS
     enabled      boolean            default true,
     password     VARCHAR(255),
     phone        VARCHAR(15),
+    csrfToken    VARCHAR(15),
     creationDate TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP()
 );
 
@@ -13,6 +14,12 @@ CREATE TABLE IF NOT EXISTS AUTHORITIES
 (
     id        BIGINT PRIMARY KEY AUTO_INCREMENT,
     authority VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS CSRF_TOKENS
+(
+    token        VARCHAR(255) PRIMARY KEY,
+    creationDate TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP()
 );
 
 CREATE TABLE IF NOT EXISTS USERS_AUTHORITIES

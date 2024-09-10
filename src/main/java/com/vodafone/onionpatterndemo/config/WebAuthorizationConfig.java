@@ -2,7 +2,7 @@ package com.vodafone.onionpatterndemo.config;
 
 import com.vodafone.onionpatterndemo.security.CustomAuthenticationProvider;
 import com.vodafone.onionpatterndemo.security.CustomEntryPoint;
-import com.vodafone.onionpatterndemo.security.filter.AuthenticationLoggingFilter;
+import com.vodafone.onionpatterndemo.security.csrf.CustomCsrfTokenRepository;
 import com.vodafone.onionpatterndemo.security.filter.CsrfTokenLoggerFilter;
 import com.vodafone.onionpatterndemo.security.filter.RequestIdHeaderFilter;
 import lombok.RequiredArgsConstructor;
@@ -14,20 +14,28 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
 @Configuration
 @RequiredArgsConstructor
 public class WebAuthorizationConfig {
 
   private final CustomAuthenticationProvider customAuthenticationProvider;
-  private final AuthenticationLoggingFilter authenticationLoggingFilter;
   private final RequestIdHeaderFilter requestIdHeaderFilter;
   private final CsrfTokenLoggerFilter csrfTokenLoggerFilter;
+  private final CustomCsrfTokenRepository customCsrfTokenRepository;
 
   @Bean
   public SecurityFilterChain getSecurityFilterChain(HttpSecurity http) throws Exception {
 
+    http.csrf(httpSecurityCsrfConfigurer ->
+    {
+      httpSecurityCsrfConfigurer.csrfTokenRepository(customCsrfTokenRepository);
+      httpSecurityCsrfConfigurer.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler());
+    });
+
     http.headers(httpSecurityHeadersConfigurer -> httpSecurityHeadersConfigurer.frameOptions(Customizer.withDefaults()).disable());
+
     http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
     {
       authorizationManagerRequestMatcherRegistry.requestMatchers("/h2-console/**").permitAll();

@@ -29,5 +29,13 @@ CREATE TABLE IF NOT EXISTS USERS_AUTHORITIES
     primary key (user_id, authority_id),
     foreign key (authority_id) references AUTHORITIES (id),
     foreign key (user_id) references USERS (id)
-)
+);
+
+CREATE TABLE IF NOT EXISTS PRODUCTS
+(
+    id      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    name    VARCHAR(255) NOT NULL UNIQUE,
+    user_id BIGINT       NOT NULL,
+    foreign key (user_id) references USERS (id)
+);
 

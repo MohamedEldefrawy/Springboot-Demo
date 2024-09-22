@@ -10,3 +10,7 @@ insert into USERS_AUTHORITIES(user_id, authority_id)
 values (1, 1),
        (1, 2),
        (2, 1);
+
+insert into products(id, name,user_id)
+values (1,'glasses', 1),
+       (2, 'book',2);

@@ -12,6 +12,4 @@ public interface CustomService<T> {
   T update(T t);
 
   T findById(Long id);
-
-  T findByEmail(String email);
 }

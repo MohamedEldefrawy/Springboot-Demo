@@ -38,7 +38,6 @@ public class UserService implements CustomService<User> {
     return userRepository.findById(id).orElse(null);
   }
 
-  @Override
   public User findByEmail(String email) {
     return this.userRepository.findUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Couldn't find user with name : " + email));
   }
